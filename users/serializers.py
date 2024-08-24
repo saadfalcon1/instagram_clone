@@ -74,7 +74,8 @@ class SignUpSerializer(serializers.ModelSerializer):
 
         return data
 
-    def validate_email_phone_number(self, value):
+    @staticmethod
+    def validate_email_phone_number(value):
         value = value.lower()
         if value and User.objects.filter(email=value).exists():
             data = {
@@ -120,7 +121,8 @@ class ChangeUserInformation(serializers.Serializer):
 
         return data
 
-    def validate_username(self, username):
+    @staticmethod
+    def validate_username(username):
         if len(username) < 5 or len(username) > 20:
             raise ValidationError(
                 {
@@ -135,7 +137,8 @@ class ChangeUserInformation(serializers.Serializer):
             )
         return username
 
-    def validate_name(self, data):
+    @staticmethod
+    def validate_name(data):
         first_name = data.get('first_name', None)
         last_name = data.get('last_name', None)
         if len(first_name) < 5 or len(first_name) > 20 or first_name.isdigit():
@@ -230,7 +233,8 @@ class LoginSerializer(TokenObtainPairSerializer):
         data['auth_status'] = self.user.auth_status
         return data
 
-    def get_user(self, **kwargs):
+    @staticmethod
+    def get_user(**kwargs):
         users = User.objects.filter(**kwargs)
         if not users.exists():
             raise ValidationError({
